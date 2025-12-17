@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _lastSyncedSignature;
   String _moodMessage = '无论今天心情如何，我都在你身边，爱你每一天。';
   final ImagePicker _picker = ImagePicker();
+  static const int _maxImageBytes = 5 * 1024 * 1024;
 
   final Map<MoodType, _MoodStyle> _moodStyles = {
     MoodType.sweet: _MoodStyle(
@@ -174,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final file = File(picked.path);
     final length = await file.length();
 
-    if (length > 5 * 1024 * 1024) {
+    if (length > _maxImageBytes) {
       _showToast('请选择小于5MB的图片');
       return;
     }
@@ -476,7 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _noteController,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: '记录下你',
+              hintText: '记录下你的心情',
               hintStyle: const TextStyle(color: Color(0xFF999999)),
               filled: true,
               fillColor: Colors.white,
@@ -768,7 +769,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '最近30天常心情',
+                  '最近30天常见心情',
                   style: TextStyle(
                     fontSize: 16 * scale,
                     color: const Color(0xFF999999),
