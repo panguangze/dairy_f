@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../models/mood_entry.dart';
 import '../providers/app_provider.dart';
+import '../widgets/diary_bottom_nav.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({Key? key}) : super(key: key);
@@ -16,142 +17,147 @@ class StatisticsScreen extends StatelessWidget {
         title: Text('Statistics'),
         centerTitle: true,
       ),
-      body: Consumer<AppProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: Stack(
+        children: [
+          Consumer<AppProvider>(
+            builder: (context, provider, child) {
+              if (provider.isLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-          if (provider.errorMessage != null) {
-            return Center(child: Text('Error: ${provider.errorMessage}'));
-          }
+              if (provider.errorMessage != null) {
+                return Center(child: Text('Error: ${provider.errorMessage}'));
+              }
 
-          final moodStats = provider.getMoodStatistics();
-          final totalEntries = provider.moodEntries.length;
+              final moodStats = provider.getMoodStatistics();
+              final totalEntries = provider.moodEntries.length;
 
-          return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Overview Card
-                  Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Overview',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 140),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Overview Card
+                      Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
                             children: [
-                              _buildStatItem(
-                                context,
-                                totalEntries.toString(),
-                                'Total Entries',
-                                Icons.insert_chart,
+                              Text(
+                                'Overview',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              _buildStatItem(
-                                context,
-                                provider.daysTogether.toString(),
-                                'Days Together',
-                                Icons.favorite,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  
-                  SizedBox(height: 20),
-                  
-                  // Mood Distribution
-                  Text(
-                    'Mood Distribution',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  
-                  SizedBox(height: 12),
-                  
-                  ...MoodType.values.map((mood) {
-                    final count = moodStats[mood] ?? 0;
-                    final percentage = totalEntries > 0 
-                        ? ((count / totalEntries) * 100).round()
-                        : 0;
-                    
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                              SizedBox(height: 16),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text(mood.emoji, style: TextStyle(fontSize: 20)),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    mood.label,
-                                    style: TextStyle(fontWeight: FontWeight.w500),
+                                  _buildStatItem(
+                                    context,
+                                    totalEntries.toString(),
+                                    'Total Entries',
+                                    Icons.insert_chart,
+                                  ),
+                                  _buildStatItem(
+                                    context,
+                                    provider.daysTogether.toString(),
+                                    'Days Together',
+                                    Icons.favorite,
                                   ),
                                 ],
                               ),
-                              Text(
-                                '$count entries ($percentage%)',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.w500,
+                            ],
+                          ),
+                        ),
+                      ),
+                      
+                      SizedBox(height: 20),
+                      
+                      // Mood Distribution
+                      Text(
+                        'Mood Distribution',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      
+                      SizedBox(height: 12),
+                      
+                      ...MoodType.values.map((mood) {
+                        final count = moodStats[mood] ?? 0;
+                        final percentage = totalEntries > 0 
+                            ? ((count / totalEntries) * 100).round()
+                            : 0;
+                        
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(mood.emoji, style: TextStyle(fontSize: 20)),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        mood.label,
+                                        style: TextStyle(fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    '$count entries ($percentage%)',
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 4),
+                              LinearProgressIndicator(
+                                value: totalEntries > 0 ? count / totalEntries : 0,
+                                minHeight: 8,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  _getColorForMood(mood, context),
                                 ),
+                                backgroundColor: Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey.shade200
+                                    : Colors.grey.shade800,
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
-                          LinearProgressIndicator(
-                            value: totalEntries > 0 ? count / totalEntries : 0,
-                            minHeight: 8,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              _getColorForMood(mood, context),
-                            ),
-                            backgroundColor: Theme.of(context).brightness == Brightness.light
-                                ? Colors.grey.shade200
-                                : Colors.grey.shade800,
-                          ),
-                        ],
+                        );
+                      }).toList(),
+                      
+                      SizedBox(height: 20),
+                      
+                      // Monthly Overview
+                      Text(
+                        'Monthly Overview',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    );
-                  }).toList(),
-                  
-                  SizedBox(height: 20),
-                  
-                  // Monthly Overview
-                  Text(
-                    'Monthly Overview',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      
+                      SizedBox(height: 12),
+                      
+                      _buildMonthlyChart(provider.moodEntries, context),
+                    ],
                   ),
-                  
-                  SizedBox(height: 12),
-                  
-                  _buildMonthlyChart(provider.moodEntries, context),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+          const DiaryBottomNavigation(currentIndex: 1),
+        ],
       ),
     );
   }

@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.pink,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+          fontFamily: 'Microsoft YaHei',
           useMaterial3: true,
         ),
         darkTheme: ThemeData(
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.pink,
             brightness: Brightness.dark,
           ),
+          fontFamily: 'Microsoft YaHei',
           useMaterial3: true,
         ),
         routerConfig: _router,

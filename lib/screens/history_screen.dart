@@ -79,13 +79,24 @@ class HistoryScreen extends StatelessWidget {
           ),
         ),
         title: Text(formattedDate),
-        subtitle: Text(entry.mood.label),
+        subtitle: Text(entry.customMoodLabel ?? entry.mood.label),
         children: [
           Padding(
             padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (entry.customMoodLabel != null)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Icon(Icons.tag, size: 18, color: Theme.of(context).colorScheme.primary),
+                        SizedBox(width: 6),
+                        Text(entry.customMoodLabel!),
+                      ],
+                    ),
+                  ),
                 if (entry.note != null && entry.note!.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.only(bottom: 8),
