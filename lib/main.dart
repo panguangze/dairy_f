@@ -45,25 +45,30 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AppProvider()),
       ],
-      child: MaterialApp.router(
-        title: title,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.pink,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
-          fontFamily: 'Microsoft YaHei',
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.pink,
-            brightness: Brightness.dark,
-          ),
-          fontFamily: 'Microsoft YaHei',
-          useMaterial3: true,
-        ),
-        routerConfig: _router,
+      child: Consumer<AppProvider>(
+        builder: (context, appProvider, _) {
+          return MaterialApp.router(
+            title: title,
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: Colors.pink,
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
+              fontFamily: 'Microsoft YaHei',
+              useMaterial3: true,
+            ),
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.pink,
+                brightness: Brightness.dark,
+              ),
+              fontFamily: 'Microsoft YaHei',
+              useMaterial3: true,
+            ),
+            themeMode: appProvider.themeMode,
+            routerConfig: _router,
+          );
+        },
       ),
     );
   }
