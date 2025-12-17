@@ -208,6 +208,7 @@ class StatisticsScreen extends StatelessWidget {
       case MoodType.other:
         return Colors.purple.shade400;
     }
+    return Theme.of(context).colorScheme.primary;
   }
 
   Widget _buildMonthlyChart(List<MoodEntry> entries, BuildContext context) {
