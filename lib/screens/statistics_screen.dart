@@ -195,14 +195,14 @@ class StatisticsScreen extends StatelessWidget {
 
   Color _getColorForMood(MoodType mood, BuildContext context) {
     switch (mood) {
+      case MoodType.sweet:
+        return Colors.pink.shade300;
       case MoodType.happy:
-        return Colors.green.shade400;
-      case MoodType.satisfied:
-        return Colors.blue.shade400;
+        return Colors.amber.shade400;
       case MoodType.normal:
         return Colors.grey.shade400;
-      case MoodType.sad:
-        return Colors.blue.shade800;
+      case MoodType.lost:
+        return Colors.blue.shade600;
       case MoodType.angry:
         return Colors.red.shade600;
       case MoodType.other:
