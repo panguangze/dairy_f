@@ -20,8 +20,9 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'love_diary.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -32,7 +33,8 @@ class DatabaseHelper {
         date TEXT UNIQUE NOT NULL,
         mood INTEGER NOT NULL,
         note TEXT,
-        imageUrl TEXT
+        imageUrl TEXT,
+        customMoodLabel TEXT
       )
     ''');
 
@@ -77,6 +79,12 @@ class DatabaseHelper {
       'enableNotifications': 1,
       'themeMode': 0, // 0: system, 1: light, 2: dark
     });
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE mood_entries ADD COLUMN customMoodLabel TEXT');
+    }
   }
 
   // Mood Entries

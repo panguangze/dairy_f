@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../providers/app_provider.dart';
+import '../widgets/diary_bottom_nav.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -56,180 +57,185 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text('Settings'),
         centerTitle: true,
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            // Profile Settings
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Profile Settings',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _coupleNameController,
-                      decoration: InputDecoration(
-                        labelText: 'Couple Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+      body: Stack(
+        children: [
+          Form(
+            key: _formKey,
+            child: ListView(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 140),
+              children: [
+                // Profile Settings
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Profile Settings',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a couple name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 12),
-                    TextFormField(
-                      controller: _partnerNameController,
-                      decoration: InputDecoration(
-                        labelText: 'Partner Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _coupleNameController,
+                          decoration: InputDecoration(
+                            labelText: 'Couple Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a couple name';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your partner\'s name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 12),
-                    TextFormField(
-                      controller: _relationshipDateController,
-                      decoration: InputDecoration(
-                        labelText: 'Relationship Start Date',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                        SizedBox(height: 12),
+                        TextFormField(
+                          controller: _partnerNameController,
+                          decoration: InputDecoration(
+                            labelText: 'Partner Name',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your partner\'s name';
+                            }
+                            return null;
+                          },
                         ),
-                        suffixIcon: Icon(Icons.calendar_today),
-                      ),
-                      readOnly: true,
-                      onTap: () async {
-                        final selectedDate = await showDatePicker(
-                          context: context,
-                          initialDate: _relationshipDateController.text.isNotEmpty
-                              ? DateTime.parse(_relationshipDateController.text)
-                              : DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now(),
-                        );
+                        SizedBox(height: 12),
+                        TextFormField(
+                          controller: _relationshipDateController,
+                          decoration: InputDecoration(
+                            labelText: 'Relationship Start Date',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            suffixIcon: Icon(Icons.calendar_today),
+                          ),
+                          readOnly: true,
+                          onTap: () async {
+                            final selectedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _relationshipDateController.text.isNotEmpty
+                                  ? DateTime.parse(_relationshipDateController.text)
+                                  : DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                            );
 
-                        if (selectedDate != null) {
-                          setState(() {
-                            _relationshipDateController.text = 
-                                DateFormat('yyyy-MM-dd').format(selectedDate);
-                          });
-                        }
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select a date';
-                        }
-                        return null;
-                      },
+                            if (selectedDate != null) {
+                              setState(() {
+                                _relationshipDateController.text = 
+                                    DateFormat('yyyy-MM-dd').format(selectedDate);
+                              });
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a date';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            
-            SizedBox(height: 16),
-            
-            // App Settings
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'App Settings',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                
+                SizedBox(height: 16),
+                
+                // App Settings
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'App Settings',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        SwitchListTile(
+                          title: Text('Enable Notifications'),
+                          value: _enableNotifications,
+                          onChanged: (value) {
+                            setState(() {
+                              _enableNotifications = value;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        ListTile(
+                          title: Text('Theme Mode'),
+                          subtitle: Text(_getThemeModeString(_selectedThemeMode)),
+                          trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                          onTap: () {
+                            _showThemeModeDialog();
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    SwitchListTile(
-                      title: Text('Enable Notifications'),
-                      value: _enableNotifications,
-                      onChanged: (value) {
-                        setState(() {
-                          _enableNotifications = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 8),
-                    ListTile(
-                      title: Text('Theme Mode'),
-                      subtitle: Text(_getThemeModeString(_selectedThemeMode)),
-                      trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () {
-                        _showThemeModeDialog();
-                      },
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            
-            SizedBox(height: 16),
-            
-            // App Info
-            Card(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'App Information',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                
+                SizedBox(height: 16),
+                
+                // App Info
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'App Information',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        _buildInfoItem('App Version', '1.0.0'),
+                        _buildInfoItem('Days Together', appProvider.daysTogether.toString()),
+                        _buildInfoItem('Total Entries', appProvider.moodEntries.length.toString()),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    _buildInfoItem('App Version', '1.0.0'),
-                    _buildInfoItem('Days Together', appProvider.daysTogether.toString()),
-                    _buildInfoItem('Total Entries', appProvider.moodEntries.length.toString()),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            
-            SizedBox(height: 16),
-            
-            // Save Button
-            ElevatedButton(
-              onPressed: _saveSettings,
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                
+                SizedBox(height: 16),
+                
+                // Save Button
+                ElevatedButton(
+                  onPressed: _saveSettings,
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'Save Settings',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Save Settings',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+          const DiaryBottomNavigation(currentIndex: 2),
+        ],
       ),
     );
   }
